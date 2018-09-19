@@ -11,8 +11,10 @@ from iaa.util import *
 
 import statistics
 
-#DATA_DIR = '/data/anafora/anaforaProjectFile/'
-DATA_DIR = '/Users/ajwieme/verbs-projects/thyme/anaforaProjectFile'
+DATA_DIR = '/data/anafora/anaforaProjectFile/'
+#DATA_DIR = '/Users/ajwieme/verbs-projects/thyme/anaforaProjectFile'
+
+IGNORE_ANNOTATOR = []
 
 class Pass:
   def __init__(self, schema_name, directory):
@@ -97,6 +99,9 @@ def get_iaa_score(directory, note_name, schema_name, annotators_dict, mode="loos
   {annotator_name: status, ...}
   """
   annotators = list(annotators_dict.keys())
+  for annotator in annotators:
+    if annotator in IGNORE_ANNOTATOR:
+      return (None, None, None)
   statuses = list(annotators_dict.values())
   doc1fn = get_note_filename(note_name, schema_name, annotators[0], statuses[0])
   doc1path = directory + strip_leading_underscore_from_fn(note_name) + '/' + doc1fn
@@ -128,6 +133,9 @@ def get_crossdoc_iaa_score(directory, note_name, schema_name, annotators_dict, m
     """
 
   annotators = list(annotators_dict.keys())
+  for annotator in annotators:
+    if annotator in IGNORE_ANNOTATOR:
+      return {}
   statuses = list(annotators_dict.values())
   doc1fn = get_note_filename(note_name, schema_name, annotators[0], statuses[0])
   doc1path = directory + strip_leading_underscore_from_fn(note_name) + '/' + doc1fn
@@ -151,28 +159,26 @@ def get_crossdoc_iaa_score(directory, note_name, schema_name, annotators_dict, m
   return iaa_dict
 
 def get_iaa_scores(data_dir):
-  coref_first_pass = Pass('Temporal-THYME2ReGold', DATA_DIR + '/THYMEColonFinal/')
   coref_second_pass = Pass('Thyme2v1-Coreference', data_dir + '/THYMEColonFinal/')
   crossdoc_pass = CrossDocPass('Thyme2v1-Correction', data_dir + '/Cross-THYMEColonFinal/')
 
-  within_doc = False
+  within_doc = True
 
   if within_doc:
     # For overall IAA
     scores = []
     rels_count = 0
-    for note_name in coref_first_pass.notes:
-      if note_name in coref_second_pass.notes:
-        annotators = list(coref_second_pass.notes[note_name].keys())
-        if len(annotators) > 1:
-          iaa_score, ann1_total, ann2_total = get_iaa_score(coref_second_pass.directory,
-                                                            note_name,
-                                                            coref_second_pass.schema_name,
-                                                            coref_second_pass.notes[note_name]
-                                                            )
-          if iaa_score is not None:
-            scores.append(iaa_score)
-            rels_count += ann1_total + ann2_total
+    for note_name in coref_second_pass.notes:
+      annotators = list(coref_second_pass.notes[note_name].keys())
+      if len(annotators) > 1:
+        iaa_score, ann1_total, ann2_total = get_iaa_score(coref_second_pass.directory,
+                                                          note_name,
+                                                          coref_second_pass.schema_name,
+                                                          coref_second_pass.notes[note_name]
+                                                          )
+        if iaa_score is not None:
+          scores.append(iaa_score)
+          rels_count += ann1_total + ann2_total
 
     print("WITHIN DOC LOOSE SCORES CON SUB:")
     print_stats(scores, rels_count)
