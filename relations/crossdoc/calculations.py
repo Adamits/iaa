@@ -118,7 +118,7 @@ def get_crossdoc_agreement(rels1, rels2, idents1, idents2):
   if total == 0:
     return (None, None, None)
   else:
-    return (agreements / total, total_doc1, total_doc2)
+    return (agreements, total_doc1, total_doc2)
 
 def get_crossdoc_agreement_by_structural_reltypes(doc1, doc2, mode="loose", reltypes=[]):
   """

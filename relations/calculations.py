@@ -135,4 +135,4 @@ def get_con_sub_agreement(con_subs1, con_subs2, idents1, idents2, mode):
   if total == 0:
     return (None, None, None)
   else:
-    return (agreements / total, total_doc1, total_doc2)
+    return (agreements, total_doc1, total_doc2)
