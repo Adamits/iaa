@@ -153,7 +153,7 @@ def get_crossdoc_iaa_score(directory, note_name, schema_name, annotators_dict, p
     score, total_ann1, total_ann2 = v
     if score is not None and print_examples and is_good_qualtiative_example(score, total_ann1, total_ann2):
       print("%s vs %s" % (doc1path, doc2path))
-      print("Score: %.2f" % score)
+      print("%s Score: %.2f" % (reltype, score))
       print("Totals: %i and %i" % (total_ann1, total_ann2))
 
   return iaa_dict
@@ -162,7 +162,7 @@ def get_iaa_scores(data_dir, print_examples=False):
   coref_second_pass = Pass('Thyme2v1-Coreference', data_dir + '/THYMEColonFinal/')
   crossdoc_pass = CrossDocPass('Thyme2v1-Correction', data_dir + '/Cross-THYMEColonFinal/')
 
-  within_doc = True
+  within_doc = False
 
   if within_doc:
     # For overall IAA
@@ -265,4 +265,4 @@ def get_iaa_scores(data_dir, print_examples=False):
 
 
 if __name__=='__main__':
-  get_iaa_scores(DATA_DIR)
+  get_iaa_scores(DATA_DIR, print_examples=True)

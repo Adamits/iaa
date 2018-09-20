@@ -10,6 +10,14 @@ def get_annotation_document(xml_path, FN):
     print("Error for %s: %s" % (FN, e))
     return None
 
+def get_annotation_text_document(xml_path, FN):
+  try:
+    doc = annotation.Document(soup(open(xml_path), "xml"), FN)
+    return doc
+  except Exception as e:
+    print("Error for %s: %s" % (FN, e))
+    return None
+
 def get_annotator(fn):
   """
   Get 3rd slot in the filename,

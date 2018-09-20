@@ -52,6 +52,16 @@ def _agrees(x, y, identsy):
     if x.get_head().id_doc_num in head_idsy and set([t.id_doc_num for t in x.get_tail()]).issubset(tail_idsy):
       return True
     else:
+      if x.get_head().id == y.get_head().id and len(tail_idsy) < len(y.get_tail()):
+        print("Disagree!")
+        print("%s disagrees with %s" % (x.id, y.id))
+        h = x.get_head()
+        t = x.get_tail()[0]
+        h2 = y.get_head()
+        t2 = y.get_tail()[0]
+        print("Head %s at span %s and Tail %s at span %s" % (h.id, h.span_string, t.id, t.span_string))
+        print("Head %s at span %s and Tail %s at span %s" % (h2.id, h2.span_string, t2.id, t2.span_string))
+
       return False
 
 def _has_agreement_in(rel_from, rels_to, idents_to):
@@ -75,6 +85,7 @@ def _has_agreement_in(rel_from, rels_to, idents_to):
     if _agrees(rel_from, rel_to, idents_to):
       return True
 
+  print("%s HAS NO AGREEMENT!!!" % rel_from.id)
   return False
 
 def get_crossdoc_agreement(rels1, rels2, idents1, idents2):

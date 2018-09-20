@@ -30,7 +30,5 @@ if __name__=='__main__':
   reltypes = ["contains-subevent"]
   iaa_dict_l = get_crossdoc_agreement_by_structural_reltypes(doc1, doc2, mode='loose', reltypes=reltypes)
   print(iaa_dict_l['contains-subevent'])
-  iaa_dict_s = get_crossdoc_agreement_by_structural_reltypes(doc1, doc2, mode='strict', reltypes=reltypes)
-  print(iaa_dict_s['contains-subevent'])
 
 
