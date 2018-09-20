@@ -224,6 +224,7 @@ def get_iaa_scores(data_dir, print_examples=False):
                                                           note_name,
                                                           coref_second_pass.schema_name,
                                                           coref_second_pass.notes[note_name],
+                                                          print_examples,
                                                           mode="strict")
         if iaa_score is not None:
           scores.append(iaa_score)
@@ -240,6 +241,7 @@ def get_iaa_scores(data_dir, print_examples=False):
       crossdoc_iaa_dict = get_crossdoc_iaa_score(crossdoc_pass.directory,
                                                  note_name, crossdoc_pass.schema_name,
                                                  crossdoc_pass.notes[note_name],
+                                                 print_examples,
                                                  mode="strict")
       for reltype, v in crossdoc_iaa_dict.items():
         score, ann1_count, ann2_count = v
