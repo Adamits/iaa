@@ -102,5 +102,5 @@ if __name__=='__main__':
         % (sum(strict_scores) / float(len(strict_scores)), len(strict_scores)))
   print("Standard Deviation: %.2f" % statistics.stdev(strict_scores))
   print("Extra Strict Cross-Doc Coref Average Score: %.2f%% over %i documents"
-        % (sum(strict_scores) / float(len(extra_strict_scores)), len(extra_strict_scores)))
+        % (sum(extra_strict_scores) / float(len(extra_strict_scores)), len(extra_strict_scores)))
   print("Standard Deviation: %.2f" % statistics.stdev(extra_strict_scores))
