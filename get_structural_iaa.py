@@ -164,54 +164,55 @@ def get_iaa_scores(data_dir):
   coref_second_pass = Pass('Thyme2v1-Coreference', data_dir + '/THYMEColonFinal/')
   crossdoc_pass = CrossDocPass('Thyme2v1-Correction', data_dir + '/Cross-THYMEColonFinal/')
 
-  within_doc = False
+  within_doc = True
 
-  if within_doc:
+  if False:
+    if within_doc:
+      # For overall IAA
+      all_agreements = 0
+      rels_count = 0
+      for note_name in coref_second_pass.notes:
+        annotators = list(coref_second_pass.notes[note_name].keys())
+        if len(annotators) > 1:
+          agreements, ann1_total, ann2_total = get_iaa_score(coref_second_pass.directory,
+                                                            note_name,
+                                                            coref_second_pass.schema_name,
+                                                            coref_second_pass.notes[note_name]
+                                                            )
+          if agreements is not None:
+            all_agreements += agreements
+            rels_count += ann1_total + ann2_total
+
+      print("WITHIN DOC LOOSE SCORES CON SUB:")
+      print_stats(all_agreements, rels_count)
+
     # For overall IAA
-    all_agreements = 0
-    rels_count = 0
-    for note_name in coref_second_pass.notes:
-      annotators = list(coref_second_pass.notes[note_name].keys())
+    total_crossdoc_rels = {}
+    all_agreements = {}
+    for note_name in crossdoc_pass.notes:
+      annotators = list(crossdoc_pass.notes[note_name].keys())
       if len(annotators) > 1:
-        agreements, ann1_total, ann2_total = get_iaa_score(coref_second_pass.directory,
-                                                          note_name,
-                                                          coref_second_pass.schema_name,
-                                                          coref_second_pass.notes[note_name]
-                                                          )
-        if agreements is not None:
-          all_agreements += agreements
-          rels_count += ann1_total + ann2_total
+        crossdoc_iaa_dict = get_crossdoc_iaa_score(crossdoc_pass.directory,
+                                                   note_name, crossdoc_pass.schema_name,
+                                                   crossdoc_pass.notes[note_name])
+        for reltype, v in crossdoc_iaa_dict.items():
+          agreements, ann1_count, ann2_count = v
+          if agreements is not None:
+            total_crossdoc_rels.setdefault(reltype, 0)
+            total_crossdoc_rels[reltype] += ann1_count + ann2_count
+            all_agreements.setdefault(reltype, 0)
+            all_agreements[reltype] += agreements
 
-    print("WITHIN DOC LOOSE SCORES CON SUB:")
-    print_stats(all_agreements, rels_count)
+    print("CrossDoc Loose scores:")
+    for relation_type, agreements in all_agreements.items():
+      if relation_type == "whole-part":
+        print("CROSS-DOC WHOLE-PART:")
+      elif relation_type == "set-subset":
+        print("CROSS-DOC SET-SUBSET:")
+      elif relation_type == "contains-subevent":
+        print("CROSS-DOC CON-SUB:")
 
-  # For overall IAA
-  total_crossdoc_rels = {}
-  all_agreements = {}
-  for note_name in crossdoc_pass.notes:
-    annotators = list(crossdoc_pass.notes[note_name].keys())
-    if len(annotators) > 1:
-      crossdoc_iaa_dict = get_crossdoc_iaa_score(crossdoc_pass.directory,
-                                                 note_name, crossdoc_pass.schema_name,
-                                                 crossdoc_pass.notes[note_name])
-      for reltype, v in crossdoc_iaa_dict.items():
-        agreements, ann1_count, ann2_count = v
-        if agreements is not None:
-          total_crossdoc_rels.setdefault(reltype, 0)
-          total_crossdoc_rels[reltype] += ann1_count + ann2_count
-          all_agreements.setdefault(reltype, 0)
-          all_agreements[reltype] += agreements
-
-  print("CrossDoc Loose scores:")
-  for relation_type, agreements in all_agreements.items():
-    if relation_type == "whole-part":
-      print("CROSS-DOC WHOLE-PART:")
-    elif relation_type == "set-subset":
-      print("CROSS-DOC SET-SUBSET:")
-    elif relation_type == "contains-subevent":
-      print("CROSS-DOC CON-SUB:")
-
-    print_stats(agreements, total_crossdoc_rels[relation_type])
+      print_stats(agreements, total_crossdoc_rels[relation_type])
 
   if within_doc:
     all_agreements = 0
@@ -248,16 +249,17 @@ def get_iaa_scores(data_dir):
           all_agreements.setdefault(reltype, 0)
           all_agreements[reltype] += agreements
 
-  print("CrossDoc Strict Scores:")
-  for relation_type, agreements in all_agreements.items():
-    if relation_type == "whole-part":
-      print("CROSS-DOC WHOLE-PART:")
-    elif relation_type == "set-subset":
-      print("CROSS-DOC SET-SUBSET:")
-    elif relation_type == "contains-subevent":
-      print("CROSS-DOC CON-SUB:")
+  if False:
+    print("CrossDoc Strict Scores:")
+    for relation_type, agreements in all_agreements.items():
+      if relation_type == "whole-part":
+        print("CROSS-DOC WHOLE-PART:")
+      elif relation_type == "set-subset":
+        print("CROSS-DOC SET-SUBSET:")
+      elif relation_type == "contains-subevent":
+        print("CROSS-DOC CON-SUB:")
 
-    print_stats(agreements, total_crossdoc_rels[relation_type])
+      print_stats(agreements, total_crossdoc_rels[relation_type])
 
 
 if __name__=='__main__':
