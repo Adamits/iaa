@@ -5,6 +5,8 @@ from reference_coreference_scorers import averaged_scorer
 from anafora2conll import make_conll_file
 from anafora4python import annotation
 
+import statistics
+
 class Pass:
   def __init__(self, schema_name, directory):
     self.notes = dict()
@@ -86,11 +88,19 @@ def get_iaa_scores(data_dir, mode="loose", setting="single-doc"):
   return scores
 
 if __name__=='__main__':
-  loose_scores = get_iaa_scores("/Users/ajwieme/verbs-projects/thyme/anaforaProjectFile/", setting="cross-doc")
-  #loose_scores = get_iaa_scores("/data/anafora/anaforaProjectFile/", setting="cross-doc")
-  strict_scores = get_iaa_scores("/Users/ajwieme/verbs-projects/thyme/anaforaProjectFile/", mode="strict", setting="cross-doc")
-  #strict_scores = get_iaa_scores("/data/anafora/anaforaProjectFile/", mode="strict", setting="cross-doc")
+  #loose_scores = get_iaa_scores("/Users/ajwieme/verbs-projects/thyme/anaforaProjectFile/", setting="cross-doc")
+  loose_scores = get_iaa_scores("/data/anafora/anaforaProjectFile/", setting="cross-doc")
+  #strict_scores = get_iaa_scores("/Users/ajwieme/verbs-projects/thyme/anaforaProjectFile/", mode="strict", setting="cross-doc")
+  strict_scores = get_iaa_scores("/data/anafora/anaforaProjectFile/", mode="strict", setting="cross-doc")
+  #extra_strict_scores = get_iaa_scores("/Users/ajwieme/verbs-projects/thyme/anaforaProjectFile/", mode="extra_strict",
+  #                               setting="cross-doc")
+  extra_strict_scores = get_iaa_scores("/data/anafora/anaforaProjectFile/", mode="extra_strict", setting="cross-doc")
   print("Loose Cross-Doc Coref Average Score: %.2f%% over %i documents"
         % (sum(loose_scores) / float(len(loose_scores)), len(loose_scores)))
+  print("Standard Deviation: %.2f" % statistics.stdev(loose_scores))
   print("Strict Cross-Doc Coref Average Score: %.2f%% over %i documents"
         % (sum(strict_scores) / float(len(strict_scores)), len(strict_scores)))
+  print("Standard Deviation: %.2f" % statistics.stdev(strict_scores))
+  print("Extra Strict Cross-Doc Coref Average Score: %.2f%% over %i documents"
+        % (sum(strict_scores) / float(len(extra_strict_scores)), len(extra_strict_scores)))
+  print("Standard Deviation: %.2f" % statistics.stdev(extra_strict_scores))

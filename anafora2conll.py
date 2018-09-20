@@ -137,9 +137,12 @@ def make_conll_file(input, output, mode="loose", setting="single-doc"):
                      + doc.get_whole_parts()\
                      + doc.get_set_subsets()\
                      + doc.get_within_doc_identical_chains()
-    else:
+    elif mode == "strict":
       # In strict mode, we still want to infer via within-doc (just ident?) links
-      inference_rels = []#doc.get_within_doc_identical_chains()
+      inference_rels = doc.get_within_doc_identical_chains()
+    elif mode == "extra_strict":
+      # In strict mode, we do no inference
+      inference_rels = []
 
     matrix = get_coref_matrix(doc.get_cross_doc_identical_chains(), inference_rels)
   else:
