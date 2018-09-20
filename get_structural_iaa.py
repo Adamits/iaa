@@ -63,7 +63,7 @@ def is_good_qualtiative_example(iaa_score, ann1_total, ann2_total):
   Criteria for determining if the 2 docs should be looked at
    for good examples of agreements/disagreements
   """
-  return False#iaa_score > .2 and iaa_score < 1 and ann1_total > 0 and ann2_total > 0
+  return iaa_score > .3 and iaa_score < 1 and ann1_total > 3 and ann2_total > 3
 
 def print_stats(scores, rels_count):
   print("\t%.2f%% for % i relations in %i documents" \
@@ -91,7 +91,7 @@ def strip_leading_underscore_from_fn(note_name):
   path_list[1] = path_list[1].lstrip('_')
   return '/'.join(path_list)
 
-def get_iaa_score(directory, note_name, schema_name, annotators_dict, mode="loose", type="contains-subevent"):
+def get_iaa_score(directory, note_name, schema_name, annotators_dict, print_examples, mode="loose", type="contains-subevent"):
   """
   Given the note info, calculate an IAA score. This is for Single Doc only
 
@@ -114,7 +114,7 @@ def get_iaa_score(directory, note_name, schema_name, annotators_dict, mode="loos
   # Will return (None, None) if no CON-SUB annotations.
   percentage, total_ann1, total_ann2 = get_relation_agreement_by_type(doc1, doc2, type, mode=mode, setting="single-doc")
 
-  if percentage is not None and is_good_qualtiative_example(percentage, total_ann1, total_ann2):
+  if percentage is not None and print_examples and is_good_qualtiative_example(percentage, total_ann1, total_ann2):
     print("%s vs %s" % (doc1path, doc2path))
     print("Score: %.2f" % percentage)
     print("Totals: %i and %i" % (total_ann1, total_ann2))
@@ -124,7 +124,7 @@ def get_iaa_score(directory, note_name, schema_name, annotators_dict, mode="loos
   else:
     return (None, None, None)
 
-def get_crossdoc_iaa_score(directory, note_name, schema_name, annotators_dict, mode="loose", types=["contains-subevent"]):
+def get_crossdoc_iaa_score(directory, note_name, schema_name, annotators_dict, print_examples, mode="loose", types=["contains-subevent"]):
   """
     Given the note info, calculate an IAA score. for crossdoc for all annotation types in types.
 
@@ -158,7 +158,7 @@ def get_crossdoc_iaa_score(directory, note_name, schema_name, annotators_dict, m
 
   return iaa_dict
 
-def get_iaa_scores(data_dir):
+def get_iaa_scores(data_dir, print_examples=False):
   coref_second_pass = Pass('Thyme2v1-Coreference', data_dir + '/THYMEColonFinal/')
   crossdoc_pass = CrossDocPass('Thyme2v1-Correction', data_dir + '/Cross-THYMEColonFinal/')
 
@@ -174,7 +174,8 @@ def get_iaa_scores(data_dir):
         iaa_score, ann1_total, ann2_total = get_iaa_score(coref_second_pass.directory,
                                                           note_name,
                                                           coref_second_pass.schema_name,
-                                                          coref_second_pass.notes[note_name]
+                                                          coref_second_pass.notes[note_name],
+                                                          print_examples
                                                           )
         if iaa_score is not None:
           scores.append(iaa_score)
@@ -191,7 +192,8 @@ def get_iaa_scores(data_dir):
     if len(annotators) > 1:
       crossdoc_iaa_dict = get_crossdoc_iaa_score(crossdoc_pass.directory,
                                                  note_name, crossdoc_pass.schema_name,
-                                                 crossdoc_pass.notes[note_name])
+                                                 crossdoc_pass.notes[note_name],
+                                                 print_examples)
       for reltype, v in crossdoc_iaa_dict.items():
         score, ann1_count, ann2_count = v
         if score is not None:
