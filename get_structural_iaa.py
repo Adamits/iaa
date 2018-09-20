@@ -3,7 +3,7 @@ import datetime
 import sys
 
 #sys.path.append('/User/ajwieme/verbs-projects/thyme')
-sys.path.append('/home/verbs/student/adwi9965/Thyme')
+sys.path.append('/home/verbs/student/adwi9965/Thyme/github')
 sys.path.append('/home/verbs/shared/anafora4python')
 from iaa.relations.calculations import get_relation_agreement_by_type
 from iaa.relations.crossdoc.calculations import get_crossdoc_agreement_by_structural_reltypes
@@ -151,7 +151,7 @@ def get_crossdoc_iaa_score(directory, note_name, schema_name, annotators_dict, p
 
   for reltype, v in iaa_dict.items():
     score, total_ann1, total_ann2 = v
-    if score is not None and is_good_qualtiative_example(score, total_ann1, total_ann2):
+    if score is not None and print_examples and is_good_qualtiative_example(score, total_ann1, total_ann2):
       print("%s vs %s" % (doc1path, doc2path))
       print("Score: %.2f" % score)
       print("Totals: %i and %i" % (total_ann1, total_ann2))
