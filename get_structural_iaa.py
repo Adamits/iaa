@@ -214,7 +214,7 @@ def get_iaa_scores(data_dir):
     print_stats(agreements, total_crossdoc_rels[relation_type])
 
   if within_doc:
-    all_agreements = []
+    all_agreements = 0
     total_rels_count = 0
     for note_name in coref_second_pass.notes:
       annotators = list(coref_second_pass.notes[note_name].keys())
@@ -225,7 +225,7 @@ def get_iaa_scores(data_dir):
                                                           coref_second_pass.notes[note_name],
                                                           mode="strict")
         if agreements is not None:
-          all_agreements.append(agreements)
+          all_agreements += agreements
           total_rels_count += ann1_total + ann2_total
 
     print("WITHIN DOC STRICT CON-SUB:")
