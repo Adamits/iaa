@@ -7,7 +7,7 @@ def get_relation_agreement_by_type(doc1, doc2, type, mode="loose", setting="sing
   con_subs2 = doc2.get_contains_subevent_tlinks()
   if type.lower() == "contains-subevent":
     if setting == "single-doc":
-      return get_con_sub_agreement(con_subs1, con_subs2, idents1, idents2, mode="loose")
+      return get_con_sub_agreement(con_subs1, con_subs2, idents1, idents2, mode=mode)
     elif setting == "cross-doc":
       import os, sys
       this_dir = os.path.dirname(os.path.realpath(__file__))

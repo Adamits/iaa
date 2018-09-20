@@ -11,8 +11,8 @@ from iaa.util import *
 
 import statistics
 
-DATA_DIR = '/data/anafora/anaforaProjectFile/'
-#DATA_DIR = '/Users/ajwieme/verbs-projects/thyme/anaforaProjectFile'
+#DATA_DIR = '/data/anafora/anaforaProjectFile/'
+DATA_DIR = '/Users/ajwieme/verbs-projects/thyme/anaforaProjectFile'
 
 IGNORE_ANNOTATOR = []
 
