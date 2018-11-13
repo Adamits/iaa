@@ -11,7 +11,7 @@ By: Adam Wiemerslage
 import argparse
 import codecs
 from bs4 import BeautifulSoup as soup
-from reference_coreference_scorers import averaged_scorer
+import os
 from anafora4python import annotation
 
 def infer_refs(ref_dict, ref_list, ref):
@@ -152,6 +152,10 @@ def make_conll_file(input, output, mode="loose", setting="single-doc"):
   for coref_id, row in enumerate(matrix):
     for entity_id in row:
       entityid2corefid[entity_id] = coref_id
+
+  # Create output path if it doesnt exist.
+  if not os.path.exists(os.path.dirname(output)):
+    os.makedirs(os.path.dirname(output))
   with codecs.open(output, 'w') as out:
     docid = doc.filename.split('.')[0]
     out.write("#begin document (%s);\n" % docid)
