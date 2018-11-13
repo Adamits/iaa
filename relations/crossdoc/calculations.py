@@ -85,7 +85,6 @@ def _has_agreement_in(rel_from, rels_to, idents_to):
     if _agrees(rel_from, rel_to, idents_to):
       return True
 
-  print("%s HAS NO AGREEMENT!!!" % rel_from.id)
   return False
 
 def get_crossdoc_agreement(rels1, rels2, idents1, idents2):
